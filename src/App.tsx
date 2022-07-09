@@ -1,7 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import Counter from './components/Counter/Counter';
 import './App.css';
 import Settings from "./components/Settings/Settings";
+import {useDispatch, useSelector} from "react-redux";
+import {
+    AddCount,
+    ChangeSettingMode,
+    reducerStateType,
+    ResetCount,
+    SetSettingMaxValue,
+    SetSettingMinValue
+} from "./store/reducer";
+import {rootStateType} from "./store/store";
 
 export type CountType = {
     value: number
@@ -11,26 +21,26 @@ export type CountType = {
 
 function App() {
 
-    const [count, setCount] = useState<CountType>({value: 0, min: 0, max: 5})
-    const [settingMode, setSettingMode] = useState(true)
-    useEffect(()=>{
-        setCount(JSON.parse(localStorage.getItem("counter settings")!))
-    },[])
+   const dispatch = useDispatch()
+    const count = useSelector<rootStateType,reducerStateType>((state)=>state.counter)
+    // useEffect(()=>{
+    //     setCount(JSON.parse(localStorage.getItem("counter settings")!))
+    // },[])
 
     const addCount = () => {
-        setCount({value: count.value + 1, min: count.min, max: count.max})
+       dispatch(AddCount())
     }
     const setSettingMinValue = (min: number) => {
-        setCount({...count, min: min})
+        dispatch(SetSettingMinValue(min))
     }
     const setSettingMaxValue = (max: number) => {
-        setCount({...count, max: max})
+       dispatch(SetSettingMaxValue(max))
     }
     const changeSettingMode =(newValue:boolean) =>{
-        setSettingMode(newValue)
+        dispatch(ChangeSettingMode(newValue))
     }
     const resetCount = () => {
-        setCount({value: count.min, min: count.min, max: count.max})
+        dispatch(ResetCount())
     }
     return (
         <div className="App">
@@ -39,9 +49,8 @@ function App() {
                        setSettingMin={setSettingMinValue}
                        setMode ={changeSettingMode}
                        resetCount={resetCount}
-                       settingMode={settingMode}
             />
-            <Counter settingMode={settingMode}
+            <Counter
                      addCount={addCount}
                      count={count}
                      resetCount={resetCount}/>

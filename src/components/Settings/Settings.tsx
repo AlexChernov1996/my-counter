@@ -1,16 +1,16 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent} from 'react';
 import Btn from "../Button/Btn";
 import s from "./settings.module.css"
-import SettingInput from "../Button/SettingInput/SettingInput";
 import {CountType} from "../../App";
+import {reducerStateType} from "../../store/reducer";
 
 type SettingsPropsType = {
-    count: CountType
+    count: reducerStateType
     setSettingMax: (max: number) => void
     setSettingMin: (min: number) => void
     setMode: (newValue: boolean) => void
     resetCount: (count: CountType) => void
-    settingMode: boolean
+
 }
 const Settings = (props: SettingsPropsType) => {
 
@@ -27,7 +27,7 @@ const Settings = (props: SettingsPropsType) => {
         props.resetCount(props.count)
         localStorage.setItem('counter settings',JSON.stringify(props.count))
     }
-    const disableSetBtn = !props.settingMode || props.count.min >= props.count.max || props.count.min < 0
+    const disableSetBtn = !props.count.settingMode || props.count.min >= props.count.max || props.count.min < 0
     return (
         <div className={s.settings}>
             <div className={s.display}>
